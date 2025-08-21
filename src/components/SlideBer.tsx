@@ -27,11 +27,9 @@ const SlideBer = () => {
   ];
 
   return (
-    <Flex>
+    
       <Flex
         style={{
-          height: "100vh",
-          width: "286px",
           flexDirection: "column",
         }}
       >
@@ -105,10 +103,7 @@ const SlideBer = () => {
           }))}
         />
       </Flex>
-      <Flex style={{ flex: 1 }}>
-        <h2>vertical</h2>
-      </Flex>
-    </Flex>
+      
   );
 };
 

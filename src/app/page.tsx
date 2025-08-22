@@ -36,18 +36,18 @@ const Home = () => {
 
   // Sample data for the charts and tables
   const spendingData = [
-    { month: "Jan", amount: 9000 }, // Adjusted to match image range (~$5K to $15K)
-    { month: "Feb", amount: 7500 },
-    { month: "Mar", amount: 11000 },
-    { month: "Apr", amount: 6000 },
-    { month: "May", amount: 4500 },
-    { month: "Jun", amount: 15030 }, // Matches the $15,030 expense in the image
-    { month: "Jul", amount: 8000 },
-    { month: "Aug", amount: 10000 },
-    { month: "Sep", amount: 12000 },
-    { month: "Oct", amount: 9000 },
-    { month: "Nov", amount: 11000 },
-    { month: "Dec", amount: 13000 },
+    { month: "Jan", amount: 6500 }, // Starting moderate
+    { month: "Feb", amount: 8200 }, // Increase
+    { month: "Mar", amount: 7800 }, // Slight decrease
+    { month: "Apr", amount: 9500 }, // Increase
+    { month: "May", amount: 7200 }, // Decrease
+    { month: "Jun", amount: 12500 }, // Peak (holiday/vacation spending)
+    { month: "Jul", amount: 10800 }, // Decrease from peak
+    { month: "Aug", amount: 6800 }, // Significant decrease
+    { month: "Sep", amount: 9200 }, // Back to school increase
+    { month: "Oct", amount: 8600 }, // Slight decrease
+    { month: "Nov", amount: 11200 }, // Holiday shopping increase
+    { month: "Dec", amount: 13800 }, // Holiday peak
   ];
 
   const transactionColumns = [
@@ -176,7 +176,7 @@ const Home = () => {
     ],
     chart: {
       type: "bar" as const,
-      height: 200,
+      height: 100,
       background: "transparent",
       toolbar: {
         show: false, // This removes the toolbar/menu from inside the chart

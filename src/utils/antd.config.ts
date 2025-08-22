@@ -51,6 +51,8 @@ export const antdTheme: ThemeConfig = {
       itemHoverBg: '#B49DFE', // Light 400
       itemSelectedColor: '#FFFFFF', // White text for selected item
     },
-    
+    Card: {
+      bodyPadding: 12,
+    }
   },
 };

@@ -17,8 +17,16 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   MoreOutlined,
+  RightOutlined,
+  LeftOutlined,
 } from "@ant-design/icons";
-import { Column, Pie } from "@ant-design/plots";
+import { Pie } from "@ant-design/plots";
+import dynamic from "next/dynamic";
+
+// Dynamically import ReactApexChart to avoid SSR issues
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -28,18 +36,18 @@ const Home = () => {
 
   // Sample data for the charts and tables
   const spendingData = [
-    { month: "Jan", amount: 4500 },
-    { month: "Feb", amount: 6200 },
-    { month: "Mar", amount: 5800 },
-    { month: "Apr", amount: 7200 },
-    { month: "May", amount: 6800 },
-    { month: "Jun", amount: 8500 },
-    { month: "Jul", amount: 7600 },
-    { month: "Aug", amount: 6200 },
-    { month: "Sep", amount: 8200 },
-    { month: "Oct", amount: 7400 },
-    { month: "Nov", amount: 6800 },
-    { month: "Dec", amount: 8200 },
+    { month: "Jan", amount: 9000 }, // Adjusted to match image range (~$5K to $15K)
+    { month: "Feb", amount: 7500 },
+    { month: "Mar", amount: 11000 },
+    { month: "Apr", amount: 6000 },
+    { month: "May", amount: 4500 },
+    { month: "Jun", amount: 15030 }, // Matches the $15,030 expense in the image
+    { month: "Jul", amount: 8000 },
+    { month: "Aug", amount: 10000 },
+    { month: "Sep", amount: 12000 },
+    { month: "Oct", amount: 9000 },
+    { month: "Nov", amount: 11000 },
+    { month: "Dec", amount: 13000 },
   ];
 
   const transactionColumns = [
@@ -158,31 +166,70 @@ const Home = () => {
     { label: "Investment System", value: 10, color: "#722ed1" },
   ];
 
-  // Column chart configuration for Spending Statistics
-  const columnConfig = {
-    data: spendingData,
-    xField: "month",
-    yField: "amount",
-    height: 200,
-    color: ({ month }: { month: string }) =>
-      month === "Jun" ? "#722ed1" : "#e6f7ff",
-    label: {
-      position: "middle",
-      style: {
-        fill: "#000",
-        opacity: 0.6,
+  // ApexCharts configuration for Spending Statistics
+  const apexChartOptions = {
+    series: [
+      {
+        name: "Spending",
+        data: spendingData.map((item) => item.amount),
+      },
+    ],
+    chart: {
+      type: "bar" as const,
+      height: 200,
+      background: "transparent",
+      toolbar: {
+        show: false, // This removes the toolbar/menu from inside the chart
       },
     },
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "40%", // Adjusted for better spacing
+        borderRadius: 4, // Matches the image's rounded edges
       },
     },
-    meta: {
-      amount: {
-        alias: "Spending Amount",
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ["transparent"],
+    },
+    xaxis: {
+      categories: spendingData.map((item) => item.month),
+    },
+    yaxis: {
+      labels: {
+        formatter: (value: number) => `$${value / 1000}K`, // Matches "$5K" format in image
       },
+    },
+    fill: {
+      opacity: 1,
+      colors: spendingData.map((item) => "#725CFF"), // Consistent purple color from image
+    },
+    tooltip: {
+      y: {
+        formatter: function (val: number) {
+          return val === 15030 ? "Expense $15,030" : "$ " + val + " thousands";
+        },
+      },
+      custom: function ({ dataPointIndex }: { dataPointIndex: number }) {
+        if (dataPointIndex === 5) {
+          // "Jun" tooltip
+          return `
+            <div class="arrow_box">
+              <span>Expense</span>
+              <span>$15,030</span>
+            </div>
+          `;
+        }
+        return false;
+      },
+    },
+    theme: {
+      mode: "light" as const,
     },
   };
 
@@ -198,7 +245,8 @@ const Home = () => {
     label: {
       type: "inner",
       offset: "-50%",
-      content: ({ percent }: { percent: number }) => `${(percent * 100).toFixed(0)}%`,
+      content: ({ percent }: { percent: number }) =>
+        `${(percent * 100).toFixed(0)}%`,
       style: {
         textAlign: "center",
         fontSize: 14,
@@ -220,7 +268,6 @@ const Home = () => {
   };
 
   return (
-    
     <Layout style={{ minHeight: "100vh" }}>
       <Layout.Sider width={280} style={{ background: "#fff" }}>
         <SlideBer />
@@ -244,45 +291,29 @@ const Home = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Title level={4} style={{ margin: 0, color: token.secondary900 }}>
+                    <Title level={4} style={{ margin: 0 }}>
                       Spending Statistics
                     </Title>
                     <Space>
+                      <Button icon={<LeftOutlined />} type="text" />
                       <Button size="small">2024</Button>
-                      <Button icon={<MoreOutlined />} type="text" />
+                      <Button icon={<RightOutlined />} type="text" />
                     </Space>
                   </div>
                 }
                 style={{ height: "300px" }}
               >
-                <Column {...columnConfig} />
+                <ReactApexChart
+                  options={apexChartOptions}
+                  series={apexChartOptions.series}
+                  type="bar"
+                  height={200}
+                />
               </Card>
             </Col>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             {/* Your Balance */}
-            {/* <Col xs={24} lg={8}>
+            <Col xs={24} lg={8}>
               <Card style={{ height: "300px" }}>
                 <div style={{ textAlign: "center", padding: "20px 0" }}>
                   <Text type="secondary">Your balance</Text>
@@ -312,10 +343,10 @@ const Home = () => {
                   </div>
                 </div>
               </Card>
-            </Col> */}
+            </Col>
 
             {/* Total Income & Total Expense */}
-            {/* <Col xs={24} sm={12} lg={8}>
+            <Col xs={24} sm={12} lg={8}>
               <Card>
                 <div
                   style={{
@@ -336,9 +367,9 @@ const Home = () => {
                   +8.2% from last month
                 </Text>
               </Card>
-            </Col> */}
+            </Col>
 
-            {/* <Col xs={24} sm={12} lg={8}>
+            <Col xs={24} sm={12} lg={8}>
               <Card>
                 <div
                   style={{
@@ -359,10 +390,10 @@ const Home = () => {
                   -2.1% from last month
                 </Text>
               </Card>
-            </Col> */}
+            </Col>
 
             {/* Spending by Category */}
-            {/* <Col xs={24} lg={8}>
+            <Col xs={24} lg={8}>
               <Card
                 title={
                   <div
@@ -409,7 +440,7 @@ const Home = () => {
                   ))}
                 </div>
               </Card>
-            </Col> */}
+            </Col>
 
             {/* Transaction History */}
             {/* <Col xs={24} lg={16}>

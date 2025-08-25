@@ -1,6 +1,17 @@
 "use client";
 
-import { Row, Col, Card, Button, Typography, Space, theme, Flex } from "antd";
+import React from "react";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Typography,
+  Space,
+  theme,
+  Flex,
+  Table,
+} from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -59,14 +70,14 @@ const Dashboard = () => {
       height: 100,
       background: "transparent",
       toolbar: {
-        show: false, // This removes the toolbar/menu from inside the chart
+        show: false,
       },
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "40%", // Adjusted for better spacing
-        borderRadius: 4, // Matches the image's rounded edges
+        columnWidth: "40%",
+        borderRadius: 4,
       },
     },
     dataLabels: {
@@ -82,12 +93,12 @@ const Dashboard = () => {
     },
     yaxis: {
       labels: {
-        formatter: (value: number) => `$${value / 1000}K`, // Matches "$5K" format in image
+        formatter: (value: number) => `$${value / 1000}K`,
       },
     },
     fill: {
       opacity: 1,
-      colors: spendingData.map((item) => "#725CFF"), // Consistent purple color from image
+      colors: spendingData.map((item) => "#725CFF"),
     },
     tooltip: {
       y: {
@@ -97,7 +108,6 @@ const Dashboard = () => {
       },
       custom: function ({ dataPointIndex }: { dataPointIndex: number }) {
         if (dataPointIndex === 5) {
-          // "Jun" tooltip
           return `
             <div class="arrow_box">
               <span>Expense</span>
@@ -182,7 +192,7 @@ const Dashboard = () => {
       <Col xs={24} lg={8}>
         <Card
           style={{
-            height: "260px",
+            height: "300px",
             padding: "0px 14px 14px 10px",
             background: "#FFFFFF",
           }}
@@ -217,6 +227,16 @@ const Dashboard = () => {
             style={{ fontSize: "12px", color: token.secondary300 }}
           >
             From Jan 01, 2022 to Jan 31, 2022
+          </Text>
+          <Text
+            style={{
+              fontSize: "12px",
+              color: "#52c41a",
+              marginTop: "4px",
+              display: "block",
+            }}
+          >
+            increase compared to last week
           </Text>
           <div style={{ margin: "24px 0", textAlign: "center" }}>
             <Space size="large">
@@ -262,7 +282,7 @@ const Dashboard = () => {
                 backgroundColor: "#F6F7F9",
                 height: "42px",
                 width: "42px",
-                cursor: "default", // Disables cursor interaction
+                cursor: "default",
               }}
             >
               <ArrowUpOutlined style={{ color: "#52c41a" }} />
@@ -273,65 +293,177 @@ const Dashboard = () => {
             >
               Total Expense
             </Text>
-
-           <Button
+            <Button
               disabled
               style={{
                 backgroundColor: "#F6F7F9",
                 height: "42px",
                 width: "42px",
-                cursor: "default", // Disables cursor interaction
+                cursor: "default",
               }}
             >
               <ArrowDownOutlined style={{ color: "#FF4423" }} />
             </Button>
           </Flex>
-          <Flex  style={{ gap: "160px", }}>
+          <Flex style={{ gap: "160px" }}>
             <Title
               level={2}
               style={{
                 margin: "20px 0 20px 0",
                 color: token.secondary500,
-              fontSize: "32px",
-            }}
-          >
-            $50,530.00{" "}
-            <Text
-              type="secondary"
-              style={{ fontSize: "12px", color: token.secondary300 }}
+                fontSize: "32px",
+              }}
             >
-              (USD)
-            </Text>
-          </Title>
+              $50,530.00{" "}
+              <Text
+                type="secondary"
+                style={{ fontSize: "12px", color: token.secondary300 }}
+              >
+                (USD)
+              </Text>
+            </Title>
             <Title
-            level={2}
-            style={{
-              margin: "20px 0 20px 0",
-              color: token.secondary500,
-              fontSize: "32px",
-            }}
-          >
-            $19,760.00{" "}
-            <Text
-              type="secondary"
-              style={{ fontSize: "12px", color: token.secondary300 }}
+              level={2}
+              style={{
+                margin: "20px 0 20px 0",
+                color: token.secondary500,
+                fontSize: "32px",
+              }}
             >
-              (USD)
-            </Text>
-          </Title>
+              $19,760.00{" "}
+              <Text
+                type="secondary"
+                style={{ fontSize: "12px", color: token.secondary300 }}
+              >
+                (USD)
+              </Text>
+            </Title>
           </Flex>
-          <Flex style={{ gap: "160px", }}>
-          <Text style={{ color: token.success600, fontSize: "12px" }}>
-            +8.2% <span style={{ color: token.secondary300 }}>increase compared to last week</span>
-          </Text>
-          <Text style={{ color: token.error600, fontSize: "12px" }}>
-            10% <span style={{ color: token.secondary300 }}>decrease compared to last week</span>
-          </Text>
+          <Flex style={{ gap: "160px" }}>
+            <Text style={{ color: token.success600, fontSize: "12px" }}>
+              +8.2%{" "}
+              <span style={{ color: token.secondary300 }}>
+                increase compared to last week
+              </span>
+            </Text>
+            <Text style={{ color: token.error600, fontSize: "12px" }}>
+              10%{" "}
+              <span style={{ color: token.secondary300 }}>
+                decrease compared to last week
+              </span>
+            </Text>
           </Flex>
         </Card>
+        {/*  Transaction History) */}
+        <Card
+          style={{ marginTop: "24px" }}
+          title={
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Title level={5} style={{ margin: 0 }}>
+                Transaction History
+              </Title>
+              <Space>
+                <Button>
+                  <Text style={{ fontSize: "12px", color: "#999" }}>
+                    1Jan-1Feb 2025
+                  </Text>
+                </Button>
+              </Space>
+            </div>
+          }
+        >
+          <Table
+            columns={[
+              {
+                title: "Transaction",
+                dataIndex: "description",
+                key: "description",
+                render: (text, record) => (
+                  <Space>
+                    <div
+                      style={{
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                        backgroundColor: record.color || "#1890ff",
+                        marginRight: "8px",
+                      }}
+                    />
+                    {text}
+                  </Space>
+                ),
+              },
+              {
+                title: "Date",
+                dataIndex: "date",
+                key: "date",
+              },
+              {
+                title: "Amount",
+                dataIndex: "amount",
+                key: "amount",
+                align: "right" as const,
+                render: (text) => `$${text}.00`,
+              },
+              {
+                title: "Status",
+                dataIndex: "status",
+                key: "status",
+                // render: (status) => (
+                //   // <Text
+                //   //   style={{
+                //   //     color:
+                //   //       status === "Completed"
+                //   //         ? "#52c41a"
+                //   //         : status === "Pending"
+                //   //         ? "#faad14"
+                //   //         : "#ff4d4f",
+                //   //     fontSize: "12px",
+                //   //   }}
+                //   // >
+                //   //   {status}
+                //   // </Text>
+                // ),
+              },
+            ]}
+            dataSource={[
+              {
+                key: "1",
+                description: "John Brown - Chinese",
+                date: "Aug 01, 2025",
+                amount: 98,
+                status: "Completed",
+                color: "#52c41a",
+              },
+              {
+                key: "2",
+                description: "John Brown - Math",
+                date: "Aug 02, 2025",
+                amount: 60,
+                status: "Pending",
+                color: "#faad14",
+              },
+              {
+                key: "3",
+                description: "John Brown - English",
+                date: "Aug 03, 2025",
+                amount: 70,
+                status: "On Hold",
+                color: "#ff4d4f",
+              },
+            ]}
+            pagination={false}
+            showHeader={true}
+            size="small"
+          />
+        </Card>
       </Col>
-
-      
       {/* Spending by Category */}
       <Col xs={24} lg={8}>
         <Card

@@ -34,7 +34,8 @@ export const antdTheme: ThemeConfig = {
     secondary700: "#0D121F",
     secondary800: "#080C19",
     secondary900: "#040815",
-
+    success600: "#7FB519",
+    error600: "#FF4423",
     borderRadius: 8,
     fontSize: 16,
 

@@ -24,5 +24,8 @@ declare module "antd/es/theme/interface" {
     secondary700?: string;
     secondary800?: string;
     secondary900?: string;
+
+    success600?: string;
+    error600?: string;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, Col, Card, Button, Typography, Space, theme } from "antd";
+import { Row, Col, Card, Button, Typography, Space, theme, Flex } from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -153,16 +153,19 @@ const Dashboard = () => {
       <Col xs={24} lg={16}>
         <Card
           title={
-            <Space style={{ justifyContent: "space-between", width: "100%" }}>
-              <Title level={4} style={{ margin: 0 }}>
+            <Flex style={{ justifyContent: "space-between", width: "100%" }}>
+              <Text
+                style={{ color: token.secondary500, fontSize: "19px" }}
+                type="secondary"
+              >
                 Spending Statistics
-              </Title>
+              </Text>
               <Space>
                 <Button icon={<LeftOutlined />} type="text" />
                 <Button size="small">2024</Button>
                 <Button icon={<RightOutlined />} type="text" />
               </Space>
-            </Space>
+            </Flex>
           }
           style={{ height: "300px" }}
         >
@@ -244,50 +247,91 @@ const Dashboard = () => {
       </Col>
 
       {/* Total Income & Total Expense */}
-      <Col xs={24} sm={12} lg={8}>
+      <Col xs={48} sm={24} lg={16}>
         <Card>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "8px",
+          <Flex gap="middle" align="center" justify="space-between">
+            <Text
+              style={{ color: token.secondary500, fontSize: "19px" }}
+              type="secondary"
+            >
+              Total Income
+            </Text>
+            <Button
+              disabled
+              style={{
+                backgroundColor: "#F6F7F9",
+                height: "42px",
+                width: "42px",
+                cursor: "default", // Disables cursor interaction
+              }}
+            >
+              <ArrowUpOutlined style={{ color: "#52c41a" }} />
+            </Button>
+            <Text
+              style={{ color: token.secondary500, fontSize: "19px" }}
+              type="secondary"
+            >
+              Total Expense
+            </Text>
+
+           <Button
+              disabled
+              style={{
+                backgroundColor: "#F6F7F9",
+                height: "42px",
+                width: "42px",
+                cursor: "default", // Disables cursor interaction
+              }}
+            >
+              <ArrowDownOutlined style={{ color: "#FF4423" }} />
+            </Button>
+          </Flex>
+          <Flex  style={{ gap: "160px", }}>
+            <Title
+              level={2}
+              style={{
+                margin: "20px 0 20px 0",
+                color: token.secondary500,
+              fontSize: "32px",
             }}
           >
-            <ArrowUpOutlined style={{ color: "#52c41a", marginRight: "8px" }} />
-            <Text type="secondary">Total Income</Text>
-          </div>
-          <Title level={3} style={{ margin: 0 }}>
-            $50,530.00
+            $50,530.00{" "}
+            <Text
+              type="secondary"
+              style={{ fontSize: "12px", color: token.secondary300 }}
+            >
+              (USD)
+            </Text>
           </Title>
-          <Text style={{ color: "#52c41a", fontSize: "12px" }}>
-            +8.2% from last month
+            <Title
+            level={2}
+            style={{
+              margin: "20px 0 20px 0",
+              color: token.secondary500,
+              fontSize: "32px",
+            }}
+          >
+            $19,760.00{" "}
+            <Text
+              type="secondary"
+              style={{ fontSize: "12px", color: token.secondary300 }}
+            >
+              (USD)
+            </Text>
+          </Title>
+          </Flex>
+          <Flex style={{ gap: "160px", }}>
+          <Text style={{ color: token.success600, fontSize: "12px" }}>
+            +8.2% <span style={{ color: token.secondary300 }}>increase compared to last week</span>
           </Text>
+          <Text style={{ color: token.error600, fontSize: "12px" }}>
+            10% <span style={{ color: token.secondary300 }}>decrease compared to last week</span>
+          </Text>
+          </Flex>
         </Card>
       </Col>
 
-      <Col xs={24} sm={12} lg={8}>
-        <Card>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "8px",
-            }}
-          >
-            <ArrowDownOutlined
-              style={{ color: "#ff4d4f", marginRight: "8px" }}
-            />
-            <Text type="secondary">Total Expense</Text>
-          </div>
-          <Title level={3} style={{ margin: 0 }}>
-            $19,760.00
-          </Title>
-          <Text style={{ color: "#ff4d4f", fontSize: "12px" }}>
-            -2.1% from last month
-          </Text>
-        </Card>
-      </Col>
-
+      
       {/* Spending by Category */}
       <Col xs={24} lg={8}>
         <Card

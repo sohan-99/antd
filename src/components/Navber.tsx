@@ -27,34 +27,18 @@ const Navbar = () => {
             borderColor: token.colorBorderSecondary,
           }}
         />
-        <Row align="middle" style={{ gap: "16px" }}>
-          <div style={{ position: "relative", display: "inline-block" }}>
-            <img
-              src="/notification.svg"
-              alt="Logo"
-              style={{
-                width: "32px",
-                height: "32px",
-                border: "2px solid",
+        <Flex align="center" style={{ gap: "16px" }}>
+     
+          <img src="/notification.svg"
+          style={{ width: "44px",
+          height: "48px",
+           borderRadius: "50%" ,
+           border: "2px solid",
+           padding: "3px",
                 borderColor: token.secondary200,
-                borderRadius: "50%",
-                padding: "4px",
-              }}
+           }}
             />
-            <span
-              style={{
-                position: "absolute",
-                top: "-2px",
-                right: "-2px",
-                width: "8px",
-                height: "8px",
-                backgroundColor: "#ff4d4f",
-                borderRadius: "50%",
-                zIndex: 10,
-                border: "2px solid white",
-              }}
-            />
-          </div>
+         
           <img
             src="/Rectangle 17.svg"
             alt="User Avatar"
@@ -67,7 +51,7 @@ const Navbar = () => {
             alt="Icon"
             style={{ width: "32px", height: "32px" }}
           />
-        </Row>
+        </Flex>
       </Flex>
     </Row>
   );

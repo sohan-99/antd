@@ -465,7 +465,7 @@ const Dashboard = () => {
         </Card>
       </Col>
       {/* Spending by Category */}
-      <Col xs={24} lg={8}>
+      <Col xs={25} lg={8}>
         <Card
           title={
             <div

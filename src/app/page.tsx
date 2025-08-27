@@ -4,6 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import LeandingPage from "@/components/LeandingPage";
 import Benefit from "@/components/Benefit";
+import Benefit2 from "@/components/Benefit2";
 
 const Home = () => {
   const { token } = theme.useToken();
@@ -38,6 +39,7 @@ const Home = () => {
     <div>
       <LeandingPage />
       <Benefit />
+      <Benefit2 />
     </div>
   );
 };

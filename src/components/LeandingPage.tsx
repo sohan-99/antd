@@ -442,13 +442,11 @@ const LeandingPage = () => {
               <Button
                 style={{
                   background: "transparent",
-                  border: "2px solid rgba(255, 255, 255, 0.8)",
                   borderRadius: "32px",
                   height: screens.md ? "50px" : "44px",
-                  width: "100%",
+                  width: "160px",
                   color: "#fff",
                   fontSize: screens.md ? "16px" : "14px",
-                  fontWeight: "600",
                   transition: "all 0.3s ease",
                 }}
                 size="large"

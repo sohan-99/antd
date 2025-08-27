@@ -3,6 +3,7 @@ import { Layout, Row, theme, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import LeandingPage from "@/components/LeandingPage";
+import Benefit from "@/components/Benefit";
 
 const Home = () => {
   const { token } = theme.useToken();
@@ -36,6 +37,7 @@ const Home = () => {
   return (
     <div>
       <LeandingPage />
+      <Benefit />
     </div>
   );
 };

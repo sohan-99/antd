@@ -1,0 +1,25 @@
+{
+  "title": "WHY USE PIKO PAY",
+  "heading": "Easy, Simple, Affordable",
+  "description": "Outstanding experience provided by our company and services. These are some of the reasons why you should use our platform in managing business finance.",
+  "cards": [
+    {
+      "id": 1,
+      "title": "Automatic Invoice Payment",
+      "description": "We support a fast, efficient, and consistent invoice payment system for all your supplier and operational payment business.",
+      "image": "/Frame 33664.png"
+    },
+    {
+      "id": 2,
+      "title": "Clear payment history",
+      "description": "Detailed financial report that explains detailed payment receipt and financial overview for a healthier business flow.",
+      "image": "/Frame 33664 (1).png"
+    },
+    {
+      "id": 3,
+      "title": "Use of multi-card payments",
+      "description": "Use more than 1 business card and easily create your business payment systems which include a more flexible business flow.",
+      "image": "/Frame 33664 (2).png"
+    }
+  ]
+}

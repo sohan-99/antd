@@ -23,7 +23,6 @@ import {
   BankOutlined,
   PayCircleOutlined,
 } from "@ant-design/icons";
-import { Pie } from "@ant-design/plots";
 import dynamic from "next/dynamic";
 
 // Dynamically import ReactApexChart to avoid SSR issues
@@ -53,11 +52,21 @@ const Dashboard = () => {
   ];
 
   const categoryData = [
-    { label: "Emergency Fund", value: 25, color: "#ff4d4f" },
-    { label: "Bank Transfer", value: 30, color: "#1890ff" },
-    { label: "Online Purchase", value: 20, color: "#faad14" },
-    { label: "Development System", value: 15, color: "#52c41a" },
-    { label: "Investment System", value: 10, color: "#722ed1" },
+    { label: "Employees Salary", value: 44, color: "#ff85c0", amount: 8000.0 },
+    { label: "Material Supplies", value: 55, color: "#ffb3d9", amount: 2130.0 },
+    { label: "Company tax", value: 41, color: "#d9b3ff", amount: 1510.0 },
+    {
+      label: "Maintenance system",
+      value: 17,
+      color: "#5b2c87",
+      amount: 2245.0,
+    },
+    {
+      label: "Development System",
+      value: 15,
+      color: "#40a9ff",
+      amount: 4385.0,
+    },
   ];
 
   // ApexCharts configuration for Spending Statistics
@@ -126,34 +135,96 @@ const Dashboard = () => {
     },
   };
 
-  // Pie chart configuration for Spending by Category
+  // ApexCharts Donut Chart configuration for Spending by Category (similar to Angular example)
+  const donutChartOptions = {
+    series: categoryData.map((item) => item.value),
+    chart: {
+      width: 380,
+      type: "donut" as const,
+      background: "transparent",
+      toolbar: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    fill: {
+      type: "gradient" as const,
+      colors: categoryData.map((item) => item.color),
+    },
+    legend: {
+      position: "bottom" as const,
+      formatter: function (val: string, opts: any) {
+        return val + " - " + opts.w.globals.series[opts.seriesIndex];
+      },
+    },
+    labels: categoryData.map((item) => item.label),
+    colors: categoryData.map((item) => item.color),
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom" as const,
+          },
+        },
+      },
+    ],
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "60%",
+        },
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val: number, opts: any) {
+          const label = categoryData[opts.seriesIndex]?.label || "Unknown";
+          const amount = categoryData[opts.seriesIndex]?.amount || 0;
+          return `${label}: $${amount.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`;
+        },
+      },
+    },
+  };
+
+  // Pie chart configuration for Spending by Category (keeping the old one as backup)
   const pieConfig = {
     appendPadding: 10,
     data: categoryData,
     angleField: "value",
     colorField: "label",
-    radius: 0.8,
+    radius: 0.9,
     innerRadius: 0.6,
     color: categoryData.map((item) => item.color),
-    label: {
-      type: "inner",
-      offset: "-50%",
-      content: ({ percent }: { percent: number }) =>
-        `${(percent * 100).toFixed(0)}%`,
-      style: {
-        textAlign: "center",
-        fontSize: 14,
-      },
-    },
+    label: false,
     interactions: [{ type: "element-selected" }, { type: "element-active" }],
     statistic: {
-      title: false,
+      title: {
+        style: {
+          whiteSpace: "pre-wrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          fontSize: 14,
+          color: "#8c8c8c",
+        },
+        content: "Overall Spending",
+      },
       content: {
         style: {
           whiteSpace: "pre-wrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          fontSize: 16,
+          fontSize: 24,
+          fontWeight: 600,
+          color: "#262626",
         },
         content: "$19,760.00",
       },
@@ -312,7 +383,7 @@ const Dashboard = () => {
             <Title
               level={2}
               style={{
-                margin: "20px 0 20px 0",
+                margin: "20px 0 0px 0",
                 color: token.secondary500,
                 fontSize: "32px",
               }}
@@ -395,7 +466,7 @@ const Dashboard = () => {
                     <div
                       style={{
                         width: "40px",
-                        height: "40px",
+                        height: "60px",
                         borderRadius: "8px",
                         backgroundColor: record.iconBg || "#f0f0f0",
                         display: "flex",
@@ -496,7 +567,7 @@ const Dashboard = () => {
         </Card>
       </Col>
       {/* Spending by Category */}
-      <Col xs={25} lg={8}>
+      <Col xs={24} lg={8}>
         <Card
           title={
             <div
@@ -506,38 +577,62 @@ const Dashboard = () => {
                 alignItems: "center",
               }}
             >
-              <Title level={5} style={{ margin: 0 }}>
-                Spending by Category
+              <Title
+                level={5}
+                style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}
+              >
+                Spend by category
               </Title>
               <Button icon={<MoreOutlined />} type="text" size="small" />
             </div>
           }
         >
-          <Pie {...pieConfig} />
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ height: "250px", marginBottom: "24px" }}>
+            <ReactApexChart
+              options={donutChartOptions}
+              series={donutChartOptions.series}
+              type="donut"
+              height={250}
+            />
+          </div>
+          <div style={{ marginTop: "24px" }}>
             {categoryData.map((item, index) => (
               <div
                 key={index}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  marginBottom: "8px",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                  padding: "0 4px",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <div
                     style={{
-                      width: "8px",
-                      height: "8px",
+                      width: "12px",
+                      height: "12px",
                       backgroundColor: item.color,
                       borderRadius: "50%",
-                      marginRight: "8px",
+                      marginRight: "12px",
                     }}
                   />
-                  <Text style={{ fontSize: "12px" }}>{item.label}</Text>
+                  <Text style={{ fontSize: "14px", color: "#262626" }}>
+                    {item.label}
+                  </Text>
                 </div>
-                <Text style={{ fontSize: "12px", fontWeight: 500 }}>
-                  ${((19760 * item.value) / 100).toFixed(2)}
+                <Text
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: "#262626",
+                  }}
+                >
+                  $
+                  {item.amount.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </Text>
               </div>
             ))}

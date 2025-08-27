@@ -19,6 +19,9 @@ import {
   RightOutlined,
   LeftOutlined,
   EllipsisOutlined,
+  CalendarOutlined,
+  BankOutlined,
+  PayCircleOutlined,
 } from "@ant-design/icons";
 import { Pie } from "@ant-design/plots";
 import dynamic from "next/dynamic";
@@ -369,8 +372,11 @@ const Dashboard = () => {
                 Transaction History
               </Title>
               <Space>
-                <Button>
-                  <Text style={{ fontSize: "12px", color: "#999" }}>
+                <Button
+                  style={{ color: token.secondary500 }}
+                  icon={<CalendarOutlined />}
+                >
+                  <Text style={{ fontSize: "12px", color: token.secondary500 }}>
                     1Jan-1Feb 2025
                   </Text>
                 </Button>
@@ -381,21 +387,25 @@ const Dashboard = () => {
           <Table
             columns={[
               {
-                title: "Transaction",
+                title: "Transactions",
                 dataIndex: "description",
                 key: "description",
                 render: (text, record) => (
-                  <Space>
+                  <Space align="center">
                     <div
                       style={{
-                        width: "16px",
-                        height: "16px",
-                        borderRadius: "50%",
-                        backgroundColor: record.color || "#1890ff",
-                        marginRight: "8px",
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "8px",
+                        backgroundColor: record.iconBg || "#f0f0f0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
-                    />
-                    {text}
+                    >
+                      {record.icon}
+                    </div>
+                    <Text style={{ fontWeight: 500 }}>{text}</Text>
                   </Space>
                 ),
               },
@@ -403,59 +413,80 @@ const Dashboard = () => {
                 title: "Date",
                 dataIndex: "date",
                 key: "date",
+                render: (text) => (
+                  <Text style={{ color: "#8c8c8c" }}>{text}</Text>
+                ),
               },
               {
                 title: "Amount",
                 dataIndex: "amount",
                 key: "amount",
                 align: "right" as const,
-                render: (text) => `$${text}.00`,
+                render: (text) => (
+                  <Text style={{ fontWeight: 600 }}>${text}</Text>
+                ),
               },
               {
                 title: "Status",
                 dataIndex: "status",
                 key: "status",
-                // render: (status) => (
-                //   // <Text
-                //   //   style={{
-                //   //     color:
-                //   //       status === "Completed"
-                //   //         ? "#52c41a"
-                //   //         : status === "Pending"
-                //   //         ? "#faad14"
-                //   //         : "#ff4d4f",
-                //   //     fontSize: "12px",
-                //   //   }}
-                //   // >
-                //   //   {status}
-                //   // </Text>
-                // ),
+                render: (text, record) => (
+                  <Space align="center">
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        backgroundColor: record.statusColor || "#52c41a",
+                      }}
+                    />
+                    <Text style={{ fontSize: "14px" }}>{text}</Text>
+                  </Space>
+                ),
               },
             ]}
             dataSource={[
               {
                 key: "1",
-                description: "John Brown - Chinese",
-                date: "Aug 01, 2025",
-                amount: 98,
+                description: "Bank Transfer",
+                date: "Jan 01, 2022",
+                amount: "2,000.00",
                 status: "Completed",
-                color: "#52c41a",
+                icon: (
+                  <BankOutlined
+                    style={{ color: "#52c41a", fontSize: "20px" }}
+                  />
+                ),
+                iconBg: "#f6ffed",
+                statusColor: "#52c41a",
               },
               {
                 key: "2",
-                description: "John Brown - Math",
-                date: "Aug 02, 2025",
-                amount: 60,
+                description: "Paypal Account",
+                date: "Jan 04, 2022",
+                amount: "2,000.00",
                 status: "Pending",
-                color: "#faad14",
+                icon: (
+                  <PayCircleOutlined
+                    style={{ color: "#1890ff", fontSize: "20px" }}
+                  />
+                ),
+                iconBg: "#e6f7ff",
+                statusColor: "#faad14",
               },
               {
                 key: "3",
-                description: "John Brown - English",
-                date: "Aug 03, 2025",
-                amount: 70,
+                description: "Bank Transfer",
+                date: "Jan 06, 2022",
+                amount: "2,000.00",
                 status: "On Hold",
-                color: "#ff4d4f",
+                icon: (
+                  <BankOutlined
+                    style={{ color: "#ff4d4f", fontSize: "20px" }}
+                  />
+                ),
+                iconBg: "#fff2f0",
+                statusColor: "#ff4d4f",
               },
             ]}
             pagination={false}

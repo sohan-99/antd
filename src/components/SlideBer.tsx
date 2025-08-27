@@ -95,7 +95,7 @@ const SlideBer = () => {
          
         <Menu
           mode="inline"
-          style={{ width: 256, borderRight: 0, marginTop: '56px' }}
+          style={{ width: 256, borderRight: 0, marginTop: '276px' }}
           items={logoutMenuItems.map(item => ({
             key: item.key,
             icon: item.icon,

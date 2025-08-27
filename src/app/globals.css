@@ -1,10 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
-    display: block;
-    margin: 0px;
-    padding: 0px;
-  
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#__next {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 .ant-card-body {
-    padding: 0px;
+  padding: 0px;
 }

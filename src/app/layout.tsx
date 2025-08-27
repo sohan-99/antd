@@ -1,5 +1,6 @@
 import { ConfigProvider } from "antd";
 import { antdTheme } from "@/utils/antd.config";
+import "./globals.css";
 
 export default function RootLayout({
   children,

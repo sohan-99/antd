@@ -54,6 +54,16 @@ export const antdTheme: ThemeConfig = {
     },
     Card: {
       bodyPadding: 12,
-    }
+    },
+    Button: {
+      colorPrimary: "#7C5CFC", // your primary button
+      colorPrimaryHover: "#5E43D8", // hover
+      colorPrimaryActive: "#432EB5", // active
+      borderRadius: 50,
+      controlHeight: 44,
+      paddingInline: 24,
+      fontWeight: 600,
+    },
+
   },
 };

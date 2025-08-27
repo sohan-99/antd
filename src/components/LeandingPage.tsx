@@ -148,18 +148,7 @@ const LeandingPage = () => {
                 Login
               </Button>
             </Link>
-            <Button
-              type="primary"
-              style={{
-                background: token.primary500,
-                border: "none",
-                borderRadius: "24px",
-                padding: "8px 24px",
-                height: "40px",
-              }}
-            >
-              Get Demo
-            </Button>
+            <Button type="primary">Get Demo</Button>
           </Space>
         </Col>
       </Row>
@@ -209,6 +198,34 @@ const LeandingPage = () => {
           >
             Manage all your business expenses with our supafast app.
           </Text>
+
+          {/* Centered Buttons */}
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "16px" }}
+          >
+            <Button
+              type="primary"
+              style={{
+                borderRadius: "24px",
+                padding: "8px 24px",
+               
+              }}
+            >
+              Get a Free Demo
+            </Button>
+            <Button
+              style={{
+                background: "transparent",
+                border: "1px solid #fff",
+                borderRadius: "24px",
+                padding: "8px 24px",
+                color: "#fff",
+                
+              }}
+            >
+              See Pricing
+            </Button>
+          </div>
         </Col>
       </Row>
     </div>

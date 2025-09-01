@@ -6,6 +6,25 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
+  /* Hide scrollbar for all browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  /* Add smooth scrolling */
+  scroll-behavior: smooth;
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -14,6 +33,9 @@ body {
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  /* Hide scrollbar for all browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 #__next {
@@ -24,4 +46,30 @@ body {
 
 .ant-card-body {
   padding: 0px;
+}
+
+/* Hide scrollbar for any container that might have overflow */
+.ant-layout,
+.ant-layout-content,
+.ant-drawer-body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.ant-layout::-webkit-scrollbar,
+.ant-layout-content::-webkit-scrollbar,
+.ant-drawer-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Utility class to hide scrollbar on any element */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }

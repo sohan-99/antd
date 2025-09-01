@@ -11,12 +11,14 @@
     "@ant-design/plots": "^2.6.3",
     "antd": "^5.27.1",
     "apexcharts": "^5.3.3",
+    "gsap": "^3.13.0",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@types/gsap": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

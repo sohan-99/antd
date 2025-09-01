@@ -1,3 +1,4 @@
+"use client";
 import {
   Row,
   Col,
@@ -15,6 +16,12 @@ import {
 import { DownOutlined, MenuOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import Link from "next/link";
+import {
+  useFadeIn,
+  useStagger,
+  useHoverScale,
+  useFadeInOnScroll,
+} from "./animations/hooks/useGSAP";
 
 const { Title, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -23,6 +30,15 @@ const LeandingPage = () => {
   const { token } = theme.useToken();
   const screens = useBreakpoint();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Animation refs
+  const navRef = useFadeIn(0, 0.8);
+  const heroRef = useStagger(".hero-element", 0.3);
+  const buttonRef = useStagger(".hero-button", 0.8);
+  const imageRef = useFadeInOnScroll();
+  const logoHoverRef = useHoverScale(1.1);
+  const demoButtonRef = useHoverScale(1.05);
+  const pricingButtonRef = useHoverScale(1.05);
 
   // Products dropdown menu items
   const productsMenu: MenuProps = {
@@ -80,6 +96,7 @@ const LeandingPage = () => {
     >
       {/* Navigation Header */}
       <Row
+        ref={navRef}
         style={{
           position: "fixed",
           top: 0,
@@ -97,15 +114,17 @@ const LeandingPage = () => {
         {/* Logo Section */}
         <Col xs={8} sm={6} md={4} lg={3}>
           <Flex align="center" gap="small">
-            <img
-              src="/Logo.svg"
-              alt="Spend.In Logo"
-              style={{
-                width: screens.xs ? "28px" : "32px",
-                height: screens.xs ? "28px" : "32px",
-                filter: "brightness(0) invert(1)",
-              }}
-            />
+            <div ref={logoHoverRef}>
+              <img
+                src="/Logo.svg"
+                alt="Spend.In Logo"
+                style={{
+                  width: screens.xs ? "28px" : "32px",
+                  height: screens.xs ? "28px" : "32px",
+                  filter: "brightness(0) invert(1)",
+                }}
+              />
+            </div>
             <Text
               style={{
                 color: "#fff",
@@ -352,6 +371,7 @@ const LeandingPage = () => {
 
       {/* Hero Section */}
       <Row
+        ref={heroRef}
         style={{
           padding: screens.lg
             ? "140px 24px 80px 24px"
@@ -366,6 +386,7 @@ const LeandingPage = () => {
         <Col xs={24} sm={22} md={20} lg={18} xl={16} xxl={14}>
           <Title
             level={1}
+            className="hero-element"
             style={{
               color: "#fff",
               fontSize: screens.xxl
@@ -396,6 +417,7 @@ const LeandingPage = () => {
             style={{ width: "100%", marginBottom: "40px" }}
           >
             <Text
+              className="hero-element"
               style={{
                 color: "#B0BEC5",
                 fontSize: screens.lg ? "20px" : screens.md ? "18px" : "16px",
@@ -408,6 +430,7 @@ const LeandingPage = () => {
               Your one-stop finance empower platform.
             </Text>
             <Text
+              className="hero-element"
               style={{
                 color: "#B0BEC5",
                 fontSize: screens.lg ? "18px" : screens.md ? "16px" : "15px",
@@ -422,53 +445,60 @@ const LeandingPage = () => {
           </Space>
 
           {/* Responsive Button Group */}
-          <Row gutter={[16, 16]} justify="center">
+          <Row ref={buttonRef} gutter={[16, 16]} justify="center">
             <Col xs={24} sm={12} md={10} lg={8} xl={7}>
-              <Button
-                type="primary"
-                style={{
-                  borderRadius: "32px",
-                  height: screens.md ? "50px" : "44px",
-                  width: "100%",
-                  fontSize: screens.md ? "16px" : "14px",
-                  fontWeight: "600",
-                }}
-                size="large"
-              >
-                Get a Free Demo
-              </Button>
+              <div ref={demoButtonRef}>
+                <Button
+                  type="primary"
+                  className="hero-button"
+                  style={{
+                    borderRadius: "32px",
+                    height: screens.md ? "50px" : "44px",
+                    width: "100%",
+                    fontSize: screens.md ? "16px" : "14px",
+                    fontWeight: "600",
+                  }}
+                  size="large"
+                >
+                  Get a Free Demo
+                </Button>
+              </div>
             </Col>
             <Col xs={24} sm={12} md={10} lg={8} xl={7}>
-              <Button
-                style={{
-                  background: "transparent",
-                  borderRadius: "32px",
-                  height: screens.md ? "50px" : "44px",
-                  width: "160px",
-                  color: "#fff",
-                  fontSize: screens.md ? "16px" : "14px",
-                  transition: "all 0.3s ease",
-                }}
-                size="large"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(255, 255, 255, 0.1)";
-                  e.currentTarget.style.borderColor = "#fff";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.borderColor =
-                    "rgba(255, 255, 255, 0.8)";
-                }}
-              >
-                See Pricing
-              </Button>
+              <div ref={pricingButtonRef}>
+                <Button
+                  className="hero-button"
+                  style={{
+                    background: "transparent",
+                    borderRadius: "32px",
+                    height: screens.md ? "50px" : "44px",
+                    width: "160px",
+                    color: "#fff",
+                    fontSize: screens.md ? "16px" : "14px",
+                    transition: "all 0.3s ease",
+                  }}
+                  size="large"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.1)";
+                    e.currentTarget.style.borderColor = "#fff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.borderColor =
+                      "rgba(255, 255, 255, 0.8)";
+                  }}
+                >
+                  See Pricing
+                </Button>
+              </div>
             </Col>
           </Row>
         </Col>
       </Row>
       {/* Dashboard Image */}
       <div
+        ref={imageRef}
         style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}
       >
         <img

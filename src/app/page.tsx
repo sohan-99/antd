@@ -1,46 +1,44 @@
 "use client";
-import { Layout, Row, theme, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Layout, Row, theme } from "antd";
 import { useState, useEffect } from "react";
 import LeandingPage from "@/components/LeandingPage";
 import Benefit from "@/components/Benefit";
 import Benefit2 from "@/components/Benefit2";
+import LoadingScreen from "@/components/LoadingScreen";
+import PageTransition from "@/components/PageTransition";
 
 const Home = () => {
   const { token } = theme.useToken();
   const [loading, setLoading] = useState(true);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
     // Simulate loading time (you can adjust this or replace with actual loading logic)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 2 seconds loading time
+    }, 3000); // 3 seconds loading time
 
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          backgroundColor: token.secondary700,
-        }}
-      >
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-      </div>
-    );
-  }
+  const handleLoadingComplete = () => {
+    setShowContent(true);
+  };
 
   return (
-    <div>
-      <LeandingPage />
-      <Benefit />
-      <Benefit2 />
-    </div>
+    <>
+      <LoadingScreen
+        isLoading={loading}
+        onLoadingComplete={handleLoadingComplete}
+      />
+      {showContent && (
+        <PageTransition>
+          <LeandingPage />
+          <Benefit />
+          <Benefit2 />
+        </PageTransition>
+      )}
+    </>
   );
 };
 

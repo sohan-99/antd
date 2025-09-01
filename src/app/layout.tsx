@@ -1,5 +1,8 @@
+"use client";
 import { ConfigProvider } from "antd";
 import { antdTheme } from "@/utils/antd.config";
+import { useEffect } from "react";
+import { initGSAP } from "@/utils/gsap";
 import "./globals.css";
 
 export default function RootLayout({
@@ -7,6 +10,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    // Initialize GSAP
+    initGSAP();
+  }, []);
+
   return (
     <html lang="en">
       <head>

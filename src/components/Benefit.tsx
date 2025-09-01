@@ -2,11 +2,19 @@
 import { Col, Row, theme, Grid } from "antd";
 import Image from "next/image";
 import benefitsData from "@/data/benefits.json";
+import {
+  useFadeInOnScroll,
+  useScrollStagger,
+} from "./animations/hooks/useGSAP";
 
 export default function Benefits() {
   const { token } = theme.useToken();
   const { useBreakpoint } = Grid;
   const screens = useBreakpoint();
+
+  // Animation refs
+  const headerRef = useFadeInOnScroll();
+  const cardsRef = useScrollStagger(".benefit-card");
 
   // Prefer lg and above for wide desktop padding (120px)
   const paddingInline = screens.lg
@@ -34,7 +42,7 @@ export default function Benefits() {
         paddingInline: paddingInline,
       }}
     >
-      <Row gutter={[24, 24]}>
+      <Row ref={headerRef} gutter={[24, 24]}>
         <Col xs={24} sm={24} md={10} lg={8} xl={8}>
           <h5
             style={{ color: token.primary500, fontSize: "20px", margin: "0" }}
@@ -60,10 +68,13 @@ export default function Benefits() {
         </Col>
       </Row>
 
-      <Row style={{ marginTop: "64px" }} gutter={[24, 24]}>
+      <Row ref={cardsRef} style={{ marginTop: "64px" }} gutter={[24, 24]}>
         {benefitsData.cards.map((card) => (
           <Col key={card.id} xs={24} sm={12} md={8} lg={8} xl={8}>
-            <div style={{ maxWidth: "384px", height: "100%" }}>
+            <div
+              className="benefit-card"
+              style={{ maxWidth: "384px", height: "100%" }}
+            >
               <Image
                 src={card.image}
                 alt={card.title}

@@ -68,15 +68,17 @@ export default function Benefit2() {
             size="middle"
             style={{ display: "flex", paddingRight: screens.xs ? "0" : "40px" }}
           >
-            <Flex>
+            <Flex align="flex-start">
               <Flex
                 justify="center"
                 align="center"
                 style={{
                   backgroundColor: token.primary500,
                   borderRadius: "12px",
-                  height: "50px",
-                  width: "80px",
+                  height: "60px",
+                  width: "60px",
+                  minWidth: "60px",
+                  flexShrink: 0,
                 }}
               >
                 <Image
@@ -87,73 +89,75 @@ export default function Benefit2() {
                   style={{ margin: 0 }}
                 />
               </Flex>
-              <div style={{ color: token.secondary400, marginLeft: "24px" }}>
-                <Title level={3} style={{ margin: 0 }}>
+              <div style={{ color: token.secondary400, marginLeft: "20px", flex: 1 }}>
+                <Title level={3} style={{ margin: 0, marginBottom: "8px" }}>
                   Automatic Invoice Payment
                 </Title>
-                <Paragraph>
+                <Paragraph style={{ margin: 0 }}>
                   Automatic payments help you to arrange payments on a certain
                   date without doing it manually again.
                 </Paragraph>
               </div>
             </Flex>
 
-            <Flex>
+            <Flex align="flex-start">
               <Flex
                 justify="center"
                 align="center"
                 style={{
                   backgroundColor: token.primary500,
                   borderRadius: "12px",
-                  height: "50px",
-                  width: "80px",
-                  overflow: "hidden",
+                  height: "60px",
+                  width: "60px",
+                  minWidth: "60px",
+                  flexShrink: 0,
                 }}
               >
                 <Image
                   src="/document-text.svg"
-                  alt="Benefit 1"
+                  alt="Benefit 2"
                   width={24}
                   height={24}
                   style={{ margin: 0 }}
                 />
               </Flex>
-              <div style={{ color: token.secondary400, marginLeft: "24px" }}>
-                <Title level={3} style={{ margin: 0 }}>
+              <div style={{ color: token.secondary400, marginLeft: "20px", flex: 1 }}>
+                <Title level={3} style={{ margin: 0, marginBottom: "8px" }}>
                   Clear payment history
                 </Title>
-                <Paragraph>
+                <Paragraph style={{ margin: 0 }}>
                   Clear payment history helps you to track your business
                   expenses on specific dates.
                 </Paragraph>
               </div>
             </Flex>
 
-            <Flex>
+            <Flex align="flex-start">
               <Flex
                 justify="center"
                 align="center"
                 style={{
                   backgroundColor: token.primary500,
                   borderRadius: "12px",
-                  height: "50px",
-                  width: "80px",
-                  overflow: "hidden",
+                  height: "60px",
+                  width: "60px",
+                  minWidth: "60px",
+                  flexShrink: 0,
                 }}
               >
                 <Image
                   src="/cards.svg"
-                  alt="Benefit 1"
+                  alt="Benefit 3"
                   width={24}
                   height={24}
                   style={{ margin: 0 }}
                 />
               </Flex>
-              <div style={{ color: token.secondary400, marginLeft: "24px" }}>
-                <Title level={3} style={{ margin: 0 }}>
+              <div style={{ color: token.secondary400, marginLeft: "20px", flex: 1 }}>
+                <Title level={3} style={{ margin: 0, marginBottom: "8px" }}>
                   Use of multi-card payments
                 </Title>
-                <Paragraph>
+                <Paragraph style={{ margin: 0 }}>
                   Have more than one debit or credit card? Don&apos;t worry, we
                   support payments using more than one card.
                 </Paragraph>

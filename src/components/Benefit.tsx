@@ -1,6 +1,6 @@
 "use client";
 
-// Benefit.tsx
+// Benefit
 import { Col, Row, theme, Grid } from "antd";
 import Image from "next/image";
 import benefitsData from "@/data/benefits.json";

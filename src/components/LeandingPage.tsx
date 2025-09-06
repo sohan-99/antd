@@ -12,16 +12,12 @@ import {
   Grid,
   Drawer,
   Menu,
+  Spin,
 } from "antd";
-import { DownOutlined, MenuOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import { DownOutlined, MenuOutlined, LoadingOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import {
-  useFadeIn,
-  useStagger,
-  useHoverScale,
-  useFadeInOnScroll,
-} from "./animations/hooks/useGSAP";
+import { gsap } from "gsap";
 
 const { Title, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -30,15 +26,55 @@ const LeandingPage = () => {
   const { token } = theme.useToken();
   const screens = useBreakpoint();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
-  // Animation refs
-  const navRef = useFadeIn(0, 0.8);
-  const heroRef = useStagger(".hero-element", 0.3);
-  const buttonRef = useStagger(".hero-button", 0.8);
-  const imageRef = useFadeInOnScroll();
-  const logoHoverRef = useHoverScale(1.1);
-  const demoButtonRef = useHoverScale(1.05);
-  const pricingButtonRef = useHoverScale(1.05);
+  // Refs for animations
+  const dashboardImageRef = useRef<HTMLImageElement>(null);
+  const imageLoadingRef = useRef<HTMLDivElement>(null);
+
+  // Handle image loading
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setImageLoaded(true);
+      setImageLoading(false);
+
+      // Animate image when loaded
+      if (dashboardImageRef.current) {
+        gsap.fromTo(
+          dashboardImageRef.current,
+          {
+            opacity: 0,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: 0.3,
+          }
+        );
+
+        // Start floating animation
+        gsap.to(dashboardImageRef.current, {
+          y: -10,
+          duration: 2,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+      }
+    };
+
+    img.onerror = () => {
+      setImageLoading(false);
+      setImageLoaded(false);
+    };
+
+    img.src = "/Dashboard.png";
+  }, []);
 
   // Products dropdown menu items
   const productsMenu: MenuProps = {
@@ -85,6 +121,7 @@ const LeandingPage = () => {
   };
   return (
     <div
+      className="no-scrollbar"
       style={{
         background: token.secondary700,
         minHeight: "100vh",
@@ -92,11 +129,13 @@ const LeandingPage = () => {
         margin: 0,
         padding: 0,
         overflowX: "hidden",
+        overflowY: "auto",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE 10+
       }}
     >
       {/* Navigation Header */}
       <Row
-        ref={navRef}
         style={{
           position: "fixed",
           top: 0,
@@ -114,17 +153,15 @@ const LeandingPage = () => {
         {/* Logo Section */}
         <Col xs={8} sm={6} md={4} lg={3}>
           <Flex align="center" gap="small">
-            <div ref={logoHoverRef}>
-              <img
-                src="/Logo.svg"
-                alt="Spend.In Logo"
-                style={{
-                  width: screens.xs ? "28px" : "32px",
-                  height: screens.xs ? "28px" : "32px",
-                  filter: "brightness(0) invert(1)",
-                }}
-              />
-            </div>
+            <img
+              src="/Logo.svg"
+              alt="Spend.In Logo"
+              style={{
+                width: screens.xs ? "28px" : "32px",
+                height: screens.xs ? "28px" : "32px",
+                filter: "brightness(0) invert(1)",
+              }}
+            />
             <Text
               style={{
                 color: "#fff",
@@ -371,7 +408,6 @@ const LeandingPage = () => {
 
       {/* Hero Section */}
       <Row
-        ref={heroRef}
         style={{
           padding: screens.lg
             ? "140px 24px 80px 24px"
@@ -386,7 +422,6 @@ const LeandingPage = () => {
         <Col xs={24} sm={22} md={20} lg={18} xl={16} xxl={14}>
           <Title
             level={1}
-            className="hero-element"
             style={{
               color: "#fff",
               fontSize: screens.xxl
@@ -417,7 +452,6 @@ const LeandingPage = () => {
             style={{ width: "100%", marginBottom: "40px" }}
           >
             <Text
-              className="hero-element"
               style={{
                 color: "#B0BEC5",
                 fontSize: screens.lg ? "20px" : screens.md ? "18px" : "16px",
@@ -430,7 +464,6 @@ const LeandingPage = () => {
               Your one-stop finance empower platform.
             </Text>
             <Text
-              className="hero-element"
               style={{
                 color: "#B0BEC5",
                 fontSize: screens.lg ? "18px" : screens.md ? "16px" : "15px",
@@ -445,63 +478,125 @@ const LeandingPage = () => {
           </Space>
 
           {/* Responsive Button Group */}
-          <Row ref={buttonRef} gutter={[16, 16]} justify="center">
+          <Row gutter={[16, 16]} justify="center">
             <Col xs={24} sm={12} md={10} lg={8} xl={7}>
-              <div ref={demoButtonRef}>
-                <Button
-                  type="primary"
-                  className="hero-button"
-                  style={{
-                    borderRadius: "32px",
-                    height: screens.md ? "50px" : "44px",
-                    width: "100%",
-                    fontSize: screens.md ? "16px" : "14px",
-                    fontWeight: "600",
-                  }}
-                  size="large"
-                >
-                  Get a Free Demo
-                </Button>
-              </div>
+              <Button
+                type="primary"
+                style={{
+                  borderRadius: "32px",
+                  height: screens.md ? "50px" : "44px",
+                  width: "100%",
+                  fontSize: screens.md ? "16px" : "14px",
+                  fontWeight: "600",
+                }}
+                size="large"
+              >
+                Get a Free Demo
+              </Button>
             </Col>
             <Col xs={24} sm={12} md={10} lg={8} xl={7}>
-              <div ref={pricingButtonRef}>
-                <Button
-                  className="hero-button"
-                  style={{
-                    background: "transparent",
-                    borderRadius: "32px",
-                    height: screens.md ? "50px" : "44px",
-                    width: "160px",
-                    color: "#fff",
-                    fontSize: screens.md ? "16px" : "14px",
-                    transition: "all 0.3s ease",
-                  }}
-                  size="large"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(255, 255, 255, 0.1)";
-                    e.currentTarget.style.borderColor = "#fff";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.borderColor =
-                      "rgba(255, 255, 255, 0.8)";
-                  }}
-                >
-                  See Pricing
-                </Button>
-              </div>
+              <Button
+                style={{
+                  background: "transparent",
+                  borderRadius: "32px",
+                  height: screens.md ? "50px" : "44px",
+                  width: "100%",
+                  color: "#fff",
+                  fontSize: screens.md ? "16px" : "14px",
+                  border: "2px solid rgba(255, 255, 255, 0.8)",
+                  transition: "all 0.3s ease",
+                }}
+                size="large"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.borderColor = "#fff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.borderColor =
+                    "rgba(255, 255, 255, 0.8)";
+                }}
+              >
+                See Pricing
+              </Button>
             </Col>
           </Row>
         </Col>
       </Row>
       {/* Dashboard Image */}
       <div
-        ref={imageRef}
-        style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "80px",
+          position: "relative",
+          minHeight: "400px",
+          marginBottom: "80px",
+        }}
       >
+        {/* Loading Background Placeholder */}
+        {imageLoading && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "80%",
+              maxWidth: "600px",
+              height: "300px",
+              background:
+                "linear-gradient(90deg, rgba(114, 92, 255, 0.1) 0%, rgba(114, 92, 255, 0.2) 50%, rgba(114, 92, 255, 0.1) 100%)",
+              borderRadius: "20px",
+              border: "2px dashed rgba(114, 92, 255, 0.3)",
+              zIndex: 1,
+              animation: "pulse 2s infinite",
+            }}
+          />
+        )}
+        {/* Loading Spinner */}
+        {imageLoading && (
+          <div
+            ref={imageLoadingRef}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "16px",
+            }}
+          >
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{
+                    fontSize: 48,
+                    color: "#725CFF",
+                  }}
+                  spin
+                />
+              }
+            />
+            <Text
+              style={{
+                color: "#B0BEC5",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+            >
+              Loading dashboard...
+            </Text>
+          </div>
+        )}
+
+        {/* Dashboard Image */}
         <img
+          ref={dashboardImageRef}
           src="/Dashboard.png"
           alt="Hero Image"
           style={{
@@ -509,9 +604,67 @@ const LeandingPage = () => {
             height: "auto",
             maxHeight: "400px",
             padding: "0 60px",
+            borderRadius: "20px",
+            boxShadow: imageLoaded
+              ? "0 30px 60px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.1)"
+              : "none",
+            filter: imageLoaded
+              ? "drop-shadow(0 4px 20px rgba(114, 92, 255, 0.3))"
+              : "none",
+            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            transformStyle: "preserve-3d",
+            willChange: "transform",
+            opacity: 0,
+          }}
+          onLoad={() => {
+            // This ensures the image is fully rendered before showing
+            if (dashboardImageRef.current) {
+              setImageLoaded(true);
+              setImageLoading(false);
+            }
+          }}
+          onMouseEnter={(e) => {
+            if (imageLoaded) {
+              gsap.to(e.currentTarget, {
+                scale: 1.05,
+                rotationY: 5,
+                rotationX: 2,
+                z: 50,
+                duration: 0.6,
+                ease: "power2.out",
+                transformOrigin: "center center",
+              });
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (imageLoaded) {
+              gsap.to(e.currentTarget, {
+                scale: 1,
+                rotationY: 0,
+                rotationX: 0,
+                z: 0,
+                duration: 0.6,
+                ease: "power2.out",
+              });
+            }
           }}
         />
       </div>
+
+      {/* Add keyframes for pulse animation */}
+      <style jsx>{`
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 0.6;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: translate(-50%, -50%) scale(1.02);
+          }
+        }
+      `}</style>
     </div>
   );
 };

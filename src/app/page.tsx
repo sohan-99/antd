@@ -1,44 +1,84 @@
 "use client";
-import { Layout, Row, theme } from "antd";
-import { useState, useEffect } from "react";
+import { Layout, Row, theme, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import LeandingPage from "@/components/LeandingPage";
 import Benefit from "@/components/Benefit";
 import Benefit2 from "@/components/Benefit2";
-import LoadingScreen from "@/components/LoadingScreen";
-import PageTransition from "@/components/PageTransition";
 
 const Home = () => {
   const { token } = theme.useToken();
   const [loading, setLoading] = useState(true);
-  const [showContent, setShowContent] = useState(false);
+
+  // Refs for animations
+  const loadingRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Simulate loading time (you can adjust this or replace with actual loading logic)
+    // Enhanced loading animation
+    const loadingSpinner = loadingRef.current?.querySelector(".ant-spin-dot");
+    if (loadingSpinner) {
+      gsap.to(loadingSpinner, {
+        rotation: 360,
+        duration: 1,
+        repeat: -1,
+        ease: "none",
+      });
+    }
+
+    // Simulate loading time with smooth transition
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // 3 seconds loading time
+    }, 2000); // 2 seconds loading time
 
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLoadingComplete = () => {
-    setShowContent(true);
-  };
+  useEffect(() => {
+    // Fade in main content after loading
+    if (!loading && contentRef.current) {
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8, ease: "power2.out" }
+      );
+    }
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div
+        ref={loadingRef}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          backgroundColor: token.secondary700,
+        }}
+      >
+        <Spin
+          indicator={
+            <LoadingOutlined
+              style={{
+                fontSize: 48,
+                color: "#725CFF",
+              }}
+              spin
+            />
+          }
+        />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <LoadingScreen
-        isLoading={loading}
-        onLoadingComplete={handleLoadingComplete}
-      />
-      {showContent && (
-        <PageTransition>
-          <LeandingPage />
-          <Benefit />
-          <Benefit2 />
-        </PageTransition>
-      )}
-    </>
+    <div ref={contentRef}>
+      <LeandingPage />
+      <Benefit />
+      <Benefit2 />
+    </div>
   );
 };
 

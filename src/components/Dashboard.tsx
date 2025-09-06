@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Row,
   Col,
@@ -24,6 +24,7 @@ import {
   PayCircleOutlined,
 } from "@ant-design/icons";
 import dynamic from "next/dynamic";
+import { gsap } from "gsap";
 
 // Dynamically import ReactApexChart to avoid SSR issues
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -34,6 +35,50 @@ const { Title, Text } = Typography;
 
 const Dashboard = () => {
   const { token } = theme.useToken();
+
+  // Animation refs
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Dashboard cards animation
+      const cards = containerRef.current?.querySelectorAll(".dashboard-card");
+      if (cards) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 40, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: "power2.out",
+            stagger: 0.1,
+          }
+        );
+      }
+
+      // Animate chart elements when they become visible
+      const chartContainers =
+        containerRef.current?.querySelectorAll(".chart-container");
+      if (chartContainers) {
+        gsap.fromTo(
+          chartContainers,
+          { opacity: 0, scale: 0.9 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            stagger: 0.2,
+            delay: 0.3,
+          }
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   // Sample data for the charts and tables
   const spendingData = [
@@ -232,414 +277,427 @@ const Dashboard = () => {
   };
 
   return (
-    <Row gutter={[24, 24]}>
-      {/* Spending Statistics */}
-      <Col xs={24} lg={16}>
-        <Card
-          title={
-            <Flex style={{ justifyContent: "space-between", width: "100%" }}>
-              <Text
-                style={{ color: token.secondary500, fontSize: "19px" }}
-                type="secondary"
-              >
-                Spending Statistics
-              </Text>
-              <Space>
-                <Button icon={<LeftOutlined />} type="text" />
-                <Button size="small">2024</Button>
-                <Button icon={<RightOutlined />} type="text" />
-              </Space>
-            </Flex>
-          }
-          style={{ height: "300px" }}
-        >
-          <ReactApexChart
-            options={apexChartOptions}
-            series={apexChartOptions.series}
-            type="bar"
-            height={200}
-          />
-        </Card>
-      </Col>
-
-      {/* Your Balance */}
-      <Col xs={24} lg={8}>
-        <Card
-          style={{
-            height: "300px",
-            padding: "0px 14px 14px 10px",
-            background: "#FFFFFF",
-          }}
-        >
-          <Space
-            align="center"
-            style={{ justifyContent: "space-between", width: "100%" }}
+    <div ref={containerRef}>
+      <Row gutter={[24, 24]}>
+        {/* Spending Statistics */}
+        <Col xs={24} lg={16}>
+          <Card
+            className="dashboard-card"
+            title={
+              <Flex style={{ justifyContent: "space-between", width: "100%" }}>
+                <Text
+                  style={{ color: token.secondary500, fontSize: "19px" }}
+                  type="secondary"
+                >
+                  Spending Statistics
+                </Text>
+                <Space>
+                  <Button icon={<LeftOutlined />} type="text" />
+                  <Button size="small">2024</Button>
+                  <Button icon={<RightOutlined />} type="text" />
+                </Space>
+              </Flex>
+            }
+            style={{ height: "300px" }}
           >
-            <Text style={{ color: token.secondary500, fontSize: "19px" }}>
-              Your balance
-            </Text>
-            <Button icon={<EllipsisOutlined />} type="text" size="large" />
-          </Space>
-          <Title
-            level={2}
+            <div className="chart-container">
+              <ReactApexChart
+                options={apexChartOptions}
+                series={apexChartOptions.series}
+                type="bar"
+                height={200}
+              />
+            </div>
+          </Card>
+        </Col>
+
+        {/* Your Balance */}
+        <Col xs={24} lg={8}>
+          <Card
+            className="dashboard-card"
             style={{
-              margin: "30px 0 0 0",
-              color: token.secondary500,
-              fontSize: "32px",
+              height: "300px",
+              padding: "0px 14px 14px 10px",
+              background: "#FFFFFF",
             }}
           >
-            $120,435.00{" "}
+            <Space
+              align="center"
+              style={{ justifyContent: "space-between", width: "100%" }}
+            >
+              <Text style={{ color: token.secondary500, fontSize: "19px" }}>
+                Your balance
+              </Text>
+              <Button icon={<EllipsisOutlined />} type="text" size="large" />
+            </Space>
+            <Title
+              level={2}
+              style={{
+                margin: "30px 0 0 0",
+                color: token.secondary500,
+                fontSize: "32px",
+              }}
+            >
+              $120,435.00{" "}
+              <Text
+                type="secondary"
+                style={{ fontSize: "12px", color: token.secondary300 }}
+              >
+                (USD)
+              </Text>
+            </Title>
             <Text
               type="secondary"
               style={{ fontSize: "12px", color: token.secondary300 }}
             >
-              (USD)
+              From Jan 01, 2022 to Jan 31, 2022
             </Text>
-          </Title>
-          <Text
-            type="secondary"
-            style={{ fontSize: "12px", color: token.secondary300 }}
-          >
-            From Jan 01, 2022 to Jan 31, 2022
-          </Text>
-          <Text
-            style={{
-              fontSize: "12px",
-              color: "#52c41a",
-              marginTop: "4px",
-              display: "block",
-            }}
-          >
-            increase compared to last week
-          </Text>
-          <div style={{ margin: "24px 0", textAlign: "center" }}>
-            <Space size="large">
-              <Button
-                type="primary"
-                style={{
-                  borderRadius: "10px",
-                  padding: "20px 20px",
-                }}
-                icon={<img src="/money-recive.svg" alt="Top Up" />}
-              >
-                Top Up
-              </Button>
-              <Button
-                style={{
-                  borderRadius: "10px",
-                  padding: "20px 20px",
-                  borderColor: token.primary500,
-                  color: token.secondary500,
-                }}
-                icon={<img src="/money-send.svg" alt="Transfer" />}
-              >
-                Transfer
-              </Button>
-            </Space>
-          </div>
-        </Card>
-      </Col>
-
-      {/* Total Income & Total Expense */}
-      <Col xs={48} sm={24} lg={16}>
-        <Card>
-          <Flex gap="middle" align="center" justify="space-between">
             <Text
-              style={{ color: token.secondary500, fontSize: "19px" }}
-              type="secondary"
+              style={{
+                fontSize: "12px",
+                color: "#52c41a",
+                marginTop: "4px",
+                display: "block",
+              }}
             >
-              Total Income
+              increase compared to last week
             </Text>
-            <Button
-              disabled
-              style={{
-                backgroundColor: "#F6F7F9",
-                height: "42px",
-                width: "42px",
-                cursor: "default",
-              }}
-            >
-              <ArrowUpOutlined style={{ color: "#52c41a" }} />
-            </Button>
-            <Text
-              style={{ color: token.secondary500, fontSize: "19px" }}
-              type="secondary"
-            >
-              Total Expense
-            </Text>
-            <Button
-              disabled
-              style={{
-                backgroundColor: "#F6F7F9",
-                height: "42px",
-                width: "42px",
-                cursor: "default",
-              }}
-            >
-              <ArrowDownOutlined style={{ color: "#FF4423" }} />
-            </Button>
-          </Flex>
-          <Flex style={{ gap: "160px" }}>
-            <Title
-              level={2}
-              style={{
-                margin: "20px 0 0px 0",
-                color: token.secondary500,
-                fontSize: "32px",
-              }}
-            >
-              $50,530.00{" "}
-              <Text
-                type="secondary"
-                style={{ fontSize: "12px", color: token.secondary300 }}
-              >
-                (USD)
-              </Text>
-            </Title>
-            <Title
-              level={2}
-              style={{
-                margin: "20px 0 20px 0",
-                color: token.secondary500,
-                fontSize: "32px",
-              }}
-            >
-              $19,760.00{" "}
-              <Text
-                type="secondary"
-                style={{ fontSize: "12px", color: token.secondary300 }}
-              >
-                (USD)
-              </Text>
-            </Title>
-          </Flex>
-          <Flex style={{ gap: "160px" }}>
-            <Text style={{ color: token.success600, fontSize: "12px" }}>
-              +8.2%{" "}
-              <span style={{ color: token.secondary300 }}>
-                increase compared to last week
-              </span>
-            </Text>
-            <Text style={{ color: token.error600, fontSize: "12px" }}>
-              10%{" "}
-              <span style={{ color: token.secondary300 }}>
-                decrease compared to last week
-              </span>
-            </Text>
-          </Flex>
-        </Card>
-        {/*  Transaction History) */}
-        <Card
-          style={{ marginTop: "24px" }}
-          title={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Title level={5} style={{ margin: 0 }}>
-                Transaction History
-              </Title>
-              <Space>
+            <div style={{ margin: "24px 0", textAlign: "center" }}>
+              <Space size="large">
                 <Button
-                  style={{ color: token.secondary500 }}
-                  icon={<CalendarOutlined />}
+                  type="primary"
+                  style={{
+                    borderRadius: "10px",
+                    padding: "20px 20px",
+                  }}
+                  icon={<img src="/money-recive.svg" alt="Top Up" />}
                 >
-                  <Text style={{ fontSize: "12px", color: token.secondary500 }}>
-                    1Jan-1Feb 2025
-                  </Text>
+                  Top Up
+                </Button>
+                <Button
+                  style={{
+                    borderRadius: "10px",
+                    padding: "20px 20px",
+                    borderColor: token.primary500,
+                    color: token.secondary500,
+                  }}
+                  icon={<img src="/money-send.svg" alt="Transfer" />}
+                >
+                  Transfer
                 </Button>
               </Space>
             </div>
-          }
-        >
-          <Table
-            columns={[
-              {
-                title: "Transactions",
-                dataIndex: "description",
-                key: "description",
-                render: (text, record) => (
-                  <Space align="center">
-                    <div
-                      style={{
-                        width: "40px",
-                        height: "60px",
-                        borderRadius: "8px",
-                        backgroundColor: record.iconBg || "#f0f0f0",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {record.icon}
-                    </div>
-                    <Text style={{ fontWeight: 500 }}>{text}</Text>
-                  </Space>
-                ),
-              },
-              {
-                title: "Date",
-                dataIndex: "date",
-                key: "date",
-                render: (text) => (
-                  <Text style={{ color: "#8c8c8c" }}>{text}</Text>
-                ),
-              },
-              {
-                title: "Amount",
-                dataIndex: "amount",
-                key: "amount",
-                align: "right" as const,
-                render: (text) => (
-                  <Text style={{ fontWeight: 600 }}>${text}</Text>
-                ),
-              },
-              {
-                title: "Status",
-                dataIndex: "status",
-                key: "status",
-                render: (text, record) => (
-                  <Space align="center">
-                    <div
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        backgroundColor: record.statusColor || "#52c41a",
-                      }}
-                    />
-                    <Text style={{ fontSize: "14px" }}>{text}</Text>
-                  </Space>
-                ),
-              },
-            ]}
-            dataSource={[
-              {
-                key: "1",
-                description: "Bank Transfer",
-                date: "Jan 01, 2022",
-                amount: "2,000.00",
-                status: "Completed",
-                icon: (
-                  <BankOutlined
-                    style={{ color: "#52c41a", fontSize: "20px" }}
-                  />
-                ),
-                iconBg: "#f6ffed",
-                statusColor: "#52c41a",
-              },
-              {
-                key: "2",
-                description: "Paypal Account",
-                date: "Jan 04, 2022",
-                amount: "2,000.00",
-                status: "Pending",
-                icon: (
-                  <PayCircleOutlined
-                    style={{ color: "#1890ff", fontSize: "20px" }}
-                  />
-                ),
-                iconBg: "#e6f7ff",
-                statusColor: "#faad14",
-              },
-              {
-                key: "3",
-                description: "Bank Transfer",
-                date: "Jan 06, 2022",
-                amount: "2,000.00",
-                status: "On Hold",
-                icon: (
-                  <BankOutlined
-                    style={{ color: "#ff4d4f", fontSize: "20px" }}
-                  />
-                ),
-                iconBg: "#fff2f0",
-                statusColor: "#ff4d4f",
-              },
-            ]}
-            pagination={false}
-            showHeader={true}
-            size="small"
-          />
-        </Card>
-      </Col>
-      {/* Spending by Category */}
-      <Col xs={24} lg={8}>
-        <Card
-          title={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Title
-                level={5}
-                style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}
+          </Card>
+        </Col>
+
+        {/* Total Income & Total Expense */}
+        <Col xs={48} sm={24} lg={16}>
+          <Card className="dashboard-card">
+            <Flex gap="middle" align="center" justify="space-between">
+              <Text
+                style={{ color: token.secondary500, fontSize: "19px" }}
+                type="secondary"
               >
-                Spend by category
+                Total Income
+              </Text>
+              <Button
+                disabled
+                style={{
+                  backgroundColor: "#F6F7F9",
+                  height: "42px",
+                  width: "42px",
+                  cursor: "default",
+                }}
+              >
+                <ArrowUpOutlined style={{ color: "#52c41a" }} />
+              </Button>
+              <Text
+                style={{ color: token.secondary500, fontSize: "19px" }}
+                type="secondary"
+              >
+                Total Expense
+              </Text>
+              <Button
+                disabled
+                style={{
+                  backgroundColor: "#F6F7F9",
+                  height: "42px",
+                  width: "42px",
+                  cursor: "default",
+                }}
+              >
+                <ArrowDownOutlined style={{ color: "#FF4423" }} />
+              </Button>
+            </Flex>
+            <Flex style={{ gap: "160px" }}>
+              <Title
+                level={2}
+                style={{
+                  margin: "20px 0 0px 0",
+                  color: token.secondary500,
+                  fontSize: "32px",
+                }}
+              >
+                $50,530.00{" "}
+                <Text
+                  type="secondary"
+                  style={{ fontSize: "12px", color: token.secondary300 }}
+                >
+                  (USD)
+                </Text>
               </Title>
-              <Button icon={<MoreOutlined />} type="text" size="small" />
-            </div>
-          }
-        >
-          <div style={{ height: "250px", marginBottom: "24px" }}>
-            <ReactApexChart
-              options={donutChartOptions}
-              series={donutChartOptions.series}
-              type="donut"
-              height={250}
-            />
-          </div>
-          <div style={{ marginTop: "24px" }}>
-            {categoryData.map((item, index) => (
+              <Title
+                level={2}
+                style={{
+                  margin: "20px 0 20px 0",
+                  color: token.secondary500,
+                  fontSize: "32px",
+                }}
+              >
+                $19,760.00{" "}
+                <Text
+                  type="secondary"
+                  style={{ fontSize: "12px", color: token.secondary300 }}
+                >
+                  (USD)
+                </Text>
+              </Title>
+            </Flex>
+            <Flex style={{ gap: "160px" }}>
+              <Text style={{ color: token.success600, fontSize: "12px" }}>
+                +8.2%{" "}
+                <span style={{ color: token.secondary300 }}>
+                  increase compared to last week
+                </span>
+              </Text>
+              <Text style={{ color: token.error600, fontSize: "12px" }}>
+                10%{" "}
+                <span style={{ color: token.secondary300 }}>
+                  decrease compared to last week
+                </span>
+              </Text>
+            </Flex>
+          </Card>
+          {/*  Transaction History) */}
+          <Card
+            className="dashboard-card"
+            style={{ marginTop: "24px" }}
+            title={
               <div
-                key={index}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: "16px",
-                  padding: "0 4px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div
-                    style={{
-                      width: "12px",
-                      height: "12px",
-                      backgroundColor: item.color,
-                      borderRadius: "50%",
-                      marginRight: "12px",
-                    }}
-                  />
-                  <Text style={{ fontSize: "14px", color: "#262626" }}>
-                    {item.label}
-                  </Text>
-                </div>
-                <Text
+                <Title level={5} style={{ margin: 0 }}>
+                  Transaction History
+                </Title>
+                <Space>
+                  <Button
+                    style={{ color: token.secondary500 }}
+                    icon={<CalendarOutlined />}
+                  >
+                    <Text
+                      style={{ fontSize: "12px", color: token.secondary500 }}
+                    >
+                      1Jan-1Feb 2025
+                    </Text>
+                  </Button>
+                </Space>
+              </div>
+            }
+          >
+            <Table
+              columns={[
+                {
+                  title: "Transactions",
+                  dataIndex: "description",
+                  key: "description",
+                  render: (text, record) => (
+                    <Space align="center">
+                      <div
+                        style={{
+                          width: "40px",
+                          height: "60px",
+                          borderRadius: "8px",
+                          backgroundColor: record.iconBg || "#f0f0f0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {record.icon}
+                      </div>
+                      <Text style={{ fontWeight: 500 }}>{text}</Text>
+                    </Space>
+                  ),
+                },
+                {
+                  title: "Date",
+                  dataIndex: "date",
+                  key: "date",
+                  render: (text) => (
+                    <Text style={{ color: "#8c8c8c" }}>{text}</Text>
+                  ),
+                },
+                {
+                  title: "Amount",
+                  dataIndex: "amount",
+                  key: "amount",
+                  align: "right" as const,
+                  render: (text) => (
+                    <Text style={{ fontWeight: 600 }}>${text}</Text>
+                  ),
+                },
+                {
+                  title: "Status",
+                  dataIndex: "status",
+                  key: "status",
+                  render: (text, record) => (
+                    <Space align="center">
+                      <div
+                        style={{
+                          width: "8px",
+                          height: "8px",
+                          borderRadius: "50%",
+                          backgroundColor: record.statusColor || "#52c41a",
+                        }}
+                      />
+                      <Text style={{ fontSize: "14px" }}>{text}</Text>
+                    </Space>
+                  ),
+                },
+              ]}
+              dataSource={[
+                {
+                  key: "1",
+                  description: "Bank Transfer",
+                  date: "Jan 01, 2022",
+                  amount: "2,000.00",
+                  status: "Completed",
+                  icon: (
+                    <BankOutlined
+                      style={{ color: "#52c41a", fontSize: "20px" }}
+                    />
+                  ),
+                  iconBg: "#f6ffed",
+                  statusColor: "#52c41a",
+                },
+                {
+                  key: "2",
+                  description: "Paypal Account",
+                  date: "Jan 04, 2022",
+                  amount: "2,000.00",
+                  status: "Pending",
+                  icon: (
+                    <PayCircleOutlined
+                      style={{ color: "#1890ff", fontSize: "20px" }}
+                    />
+                  ),
+                  iconBg: "#e6f7ff",
+                  statusColor: "#faad14",
+                },
+                {
+                  key: "3",
+                  description: "Bank Transfer",
+                  date: "Jan 06, 2022",
+                  amount: "2,000.00",
+                  status: "On Hold",
+                  icon: (
+                    <BankOutlined
+                      style={{ color: "#ff4d4f", fontSize: "20px" }}
+                    />
+                  ),
+                  iconBg: "#fff2f0",
+                  statusColor: "#ff4d4f",
+                },
+              ]}
+              pagination={false}
+              showHeader={true}
+              size="small"
+            />
+          </Card>
+        </Col>
+        {/* Spending by Category */}
+        <Col xs={24} lg={8}>
+          <Card
+            className="dashboard-card"
+            title={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Title
+                  level={5}
+                  style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}
+                >
+                  Spend by category
+                </Title>
+                <Button icon={<MoreOutlined />} type="text" size="small" />
+              </div>
+            }
+          >
+            <div
+              className="chart-container"
+              style={{ height: "250px", marginBottom: "24px" }}
+            >
+              <ReactApexChart
+                options={donutChartOptions}
+                series={donutChartOptions.series}
+                type="donut"
+                height={250}
+              />
+            </div>
+            <div style={{ marginTop: "24px" }}>
+              {categoryData.map((item, index) => (
+                <div
+                  key={index}
                   style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    color: "#262626",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "16px",
+                    padding: "0 4px",
                   }}
                 >
-                  $
-                  {item.amount.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </Text>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </Col>
-    </Row>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: item.color,
+                        borderRadius: "50%",
+                        marginRight: "12px",
+                      }}
+                    />
+                    <Text style={{ fontSize: "14px", color: "#262626" }}>
+                      {item.label}
+                    </Text>
+                  </div>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#262626",
+                    }}
+                  >
+                    $
+                    {item.amount.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </Text>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
